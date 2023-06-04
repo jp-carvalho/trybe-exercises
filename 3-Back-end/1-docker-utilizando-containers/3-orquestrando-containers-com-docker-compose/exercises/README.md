@@ -187,3 +187,63 @@ docker-compose up
 <!-- Para simularmos o processo de desenvolvimento, faça a alteração em alguma parte do código do app react, e então execute o comando para subir o serviço novamente, “rebuildando” a imagem para aplicar as alterações. -->
 
 docker-compose up --build -d
+
+<!-- Exercício 7:
+Crie um arquivo Compose para subir o WordPress com MySQL:
+
+1 - Utilize a imagem wordpress:php8.0 e mysql:5.7.40;
+
+2 - Faça bind da porta 80 do container do wordpress para 8080 do host;
+
+3 - Defina as seguintes variáveis para o wordpress:
+
+WORDPRESS_DB_HOST: db:3306
+WORDPRESS_DB_USER: wordpress
+WORDPRESS_DB_PASSWORD: wordpress
+WORDPRESS_DB_NAME: wordpress
+4 - Defina as seguintes variáveis para o mysql:
+
+MYSQL_ROOT_PASSWORD: somewordpress
+MYSQL_DATABASE: wordpress
+MYSQL_USER: wordpress
+MYSQL_PASSWORD: wordpress
+5 - Defina o volume db_data para o mysql;
+
+6 - Utilize o parâmetro depends_on para criar dependência entre os serviços;
+
+7 - Adicione a política de restart com o valor always aos serviços;
+
+8 - Suba os serviços utilizando docker-compose e abra no terminal para validar o funcionamento.
+
+Solução -->
+  version: '3'
+
+  services:
+    db:
+      # platform: linux/x86_64 # Caso utilize MacOS, descomente essa linha
+      image: mysql:5.7.40
+      volumes:
+        - db_data:/var/lib/mysql
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: somewordpress
+        MYSQL_DATABASE: wordpress
+        MYSQL_USER: wordpress
+        MYSQL_PASSWORD: wordpress
+
+    wordpress:
+      depends_on:
+        - db
+      image: wordpress:php8.0
+      ports:
+        - "8000:80"
+      restart: always
+      environment:
+        WORDPRESS_DB_HOST: db:3306
+        WORDPRESS_DB_USER: wordpress
+        WORDPRESS_DB_PASSWORD: wordpress
+        WORDPRESS_DB_NAME: wordpress
+  volumes:
+      db_data: {}
+
+<!-- https://docs.docker.com/samples/wordpress/ -->
