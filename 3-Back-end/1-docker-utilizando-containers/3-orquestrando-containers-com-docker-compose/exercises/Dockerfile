@@ -1,0 +1,2 @@
+FROM alpine:3.14
+CMD ["Echo", "CRIAR ARQUIVO DOCKER DIREITO"]
