@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "readline-sync": "1.4.10"
+  },
+  "name": "bonus-exercises",
+  "version": "1.0.0",
+  "main": "fibonacci.js",
+  "devDependencies": {},
+  "scripts": {
+    "fibonacci": "node fibonacci.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jp",
+  "license": "ISC",
+  "description": ""
+}
