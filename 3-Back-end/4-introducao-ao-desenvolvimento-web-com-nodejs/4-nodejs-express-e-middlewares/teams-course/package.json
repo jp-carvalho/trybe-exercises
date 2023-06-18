@@ -1,0 +1,26 @@
+{
+  "name": "teams-course",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json .",
+    "test": "mocha tests/**/*.test.js --exit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "2.8.5",
+    "express": "4.17.1",
+    "express-rate-limit": "6.7.0",
+    "helmet": "6.0.1",
+    "morgan": "1.10.0"
+  },
+  "devDependencies": {
+    "express-async-errors": "3.1.1",
+    "nodemon": "2.0.15"
+  }
+}
