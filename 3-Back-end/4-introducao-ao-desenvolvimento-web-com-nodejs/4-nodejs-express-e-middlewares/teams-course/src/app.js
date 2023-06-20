@@ -7,7 +7,7 @@ const routers = require('./routes');
 
 const app = express();
 app.use(morgan('dev'));
-app.use(express.static('/images'));
+app.use(express.static('images'));
 app.use(express.json());
 // monta o router na rota /teams (1)
 app.use(routers);
