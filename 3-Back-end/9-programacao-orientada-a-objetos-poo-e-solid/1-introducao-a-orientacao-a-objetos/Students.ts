@@ -1,18 +1,20 @@
-
 class Student {
   private _enrollment: string;
-  private _name: string;
-  private _examsGrades: number[] = Array();
-  private _worksGrades: number[] = Array();
 
-  constructor(enrollment: string, name: string, exams: number[], works: number[]) {
+  private _name: string;
+
+  private _examsGrades: number[];
+
+  private _assignmentsGrades: number[];
+
+
+  constructor(enrollment: string, name: string) {
     this._enrollment = enrollment;
     this._name = name;
-    // para verificar o tamanho do array, esse examsGrades tem que referenciar o do SET que fica abaixo e não o criado acima no Student, e ele deve ter como default um Array()  vazio
-    this.examsGrades = exams;
-    this.worksGrades = works;
+    this._examsGrades = [];
+    this._assignmentsGrades = [];
   }
-
+  
   public get enrollment(): string {
     return this._enrollment;
   }
@@ -24,6 +26,9 @@ class Student {
     return this._name;
   }
   public set name(value: string) {
+    if (value.length < 3) {
+      throw new Error("O nome deve conter no mínimo 3 caracteres");
+    }
     this._name = value;
   }
 
@@ -32,48 +37,45 @@ class Student {
   }
   public set examsGrades(value: number[]) {
     if (value.length !== 4) {
-      throw new Error("A pessoa precisa de 4 notas de prova");
+      throw new Error("A pessoa estudante só pode possuir 4 notas de provas");
     }
     this._examsGrades = value;
   }
 
-  public get worksGrades(): number[] {
-    return this._worksGrades;
+  public get assignmentsGrades(): number[] {
+    return this._assignmentsGrades;
   }
-  public set worksGrades(value: number[]) {
+  public set assignmentsGrades(value: number[]) {
     if (value.length !== 2) {
-      throw new Error("A pessoa precisa de 2 notas de trabalho");
+      throw new Error("A pessoa estudante só pode possuir 2 notas de trabalhos");
+      
     }
-    this._worksGrades = value;
+    this._assignmentsGrades = value;
   }
 
   sumGrades(): number {
-    return [...this.examsGrades, ...this.worksGrades]
-    .reduce((prevGrade, grade) => {
-      grade += prevGrade;
-      return grade;
-    }, 0)
+    return [...this.examsGrades, ...this.assignmentsGrades]
+    .reduce((previousNote, note) => {
+        const nextNote = note + previousNote;
+
+        return nextNote;
+      }, 0)
   }
 
-  sumAverageGrades(): number {
+  sumAvarageGrade(): number {
     const sumGrades = this.sumGrades();
-    const divider = this.examsGrades.length + this.worksGrades.length;
-    return Math.round(sumGrades / divider);
-  }
+    const divider = this.examsGrades.length + this.assignmentsGrades.length;
 
+    return Math.round(sumGrades / divider)
+  }
+  
 }
 
-const student1 = new Student('202001011', 'Maria', [8, 7, 9, 10], [6, 5]);
-console.log(student1);
-console.log('Soma das notas: ', student1.sumGrades());
-console.log('Média das notas: ', student1.sumAverageGrades());
+const personOne = new Student('101202303', 'Maria da Silva');
+personOne.examsGrades = [25, 20, 23, 23];
+personOne.assignmentsGrades = [45, 45];
 
-
-
-const student2 = new Student('202001012', 'João', [5, 7, 9, 10], [9, 8]);
-console.log(student2);
-console.log('Soma das notas: ', student2.sumGrades());
-console.log('Média das notas: ', student2.sumAverageGrades());
-
-
+console.log(personOne);
+console.log('Soma de todas as notas de exames: ', personOne.sumGrades());
+console.log('Média das notas de exames: ', personOne.sumAvarageGrade());
 
