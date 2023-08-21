@@ -54,7 +54,7 @@ class LocalDbModel implements IModel {
 }
 
 class CharacterService {
-  constructor(readonly model: LocalDbModel) { }
+  constructor(readonly model: IModel) { }
   async create(character: Character) {
     const newCharacter = await this.model.create(character);
     return ({ status: 201, data: newCharacter});
@@ -62,6 +62,40 @@ class CharacterService {
 
   async getAll() {
     const allCharacter = await this.model.getAll();
-    return ({ status: 200, allCharacter})
+    return ({ status: 200, data: allCharacter})
   }
 }
+
+class MockDbModel implements IModel {
+  async create(character: Character) {
+    console.log('character created');
+    return { id: 1, name: 'Peach', specialMove: 'Toad'};
+  }
+  
+  async update(id: number, character: Character) {
+    console.log('character updated');
+    return { id: 1, name: 'Yoshi', specialMove: 'Egg Lay'};
+  }
+
+  async delete(id: number) {
+    console.log('character deleted');
+    return true;
+  }
+
+  async getAll() {
+    return [
+      {id: 1, name: 'Samus', specialMove: 'Charge Shot'},
+      {id: 2, name: 'Kirby', specialMove: 'Inhale'},
+    ];
+  }
+
+  async getById(id: number) {
+    return {id: 1, name: 'Mario', specialMove: 'Fireball'};
+  }
+}
+
+const A = new CharacterService(new LocalDbModel());
+A.getAll().then(console.log);
+
+const B = new CharacterService(new MockDbModel());
+B.getAll().then(console.log);
