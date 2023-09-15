@@ -5,9 +5,14 @@ def validate_email(email):
 
     while email[index] != "@" and index < len(email):
         letter = email[index]
-        if not letter.isalpha() and not letter.isdigit() and letter not in ("_", "-"):
+        if (
+            not letter.isalpha()
+            and not letter.isdigit()
+            and letter not in ("_", "-")
+        ):
             raise ValueError(
-                "Username should contain only letters, " "digits, dashes or underscores"
+                "Username should contain only letters, "
+                "digits, dashes or underscores"
             )
         index += 1
     index += 1
