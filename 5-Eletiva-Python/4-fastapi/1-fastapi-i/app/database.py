@@ -1,5 +1,6 @@
 from pymongo import MongoClient
+from app.config import settings
 
-client = MongoClient("mongodb://localhost:27017")
+client = MongoClient(settings.mongo_uri)
 
-db = client["fastapi-app"]
+db = client[settings.db_name]

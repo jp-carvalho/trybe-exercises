@@ -12,6 +12,7 @@ def client():
 
 @pytest.fixture(autouse=True)
 def clear_db():
+    assert RecipeRepository._collection.database.name == "test-fastapi-app"
     RecipeRepository._collection.drop()
 
 
