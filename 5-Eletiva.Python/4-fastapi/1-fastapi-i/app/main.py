@@ -1,46 +1,34 @@
-from fastapi import FastAPI, HTTPException, Path
+from fastapi import FastAPI, HTTPException
+from app.models import Recipe, StoredRecipe
+from app.repository import RecipeRepository
 
 app = FastAPI(title="Recipes API")
 
-RECIPES: list[dict] = []
 
-
-# Listar todas
-@app.get("/", response_model=list[dict])
+@app.get("/", response_model=list[StoredRecipe])
 def list_recipes():
-    return RECIPES
+    return RecipeRepository.find_all()
 
 
-# Listar uma
-@app.get("/{recipe_id}", response_model=dict)
-# define que o id deve ser maior que 0 (gt=0)
-def get_recipe(recipe_id: int = Path(gt=0)):
-    try:
-        return RECIPES[recipe_id - 1]
-    except IndexError:
+@app.get("/{recipe_id}", response_model=StoredRecipe)
+def get_recipe(recipe_id: str):
+    result = RecipeRepository.find_by_id(recipe_id)
+    if result is None:
         raise HTTPException(status_code=404, detail="Recipe not found")
 
-
-# Criar
-@app.post("/", response_model=dict, status_code=201)
-def create_recipe(recipe: dict):
-    recipe["id"] = len(RECIPES) + 1
-    RECIPES.append(recipe)
-    return recipe
+    return result
 
 
-# Atualizar
-@app.put("/{recipe_id}", response_model=dict)
-def update_recipe(new_recipe: dict, recipe_id: int = Path(gt=0)):
-    RECIPES[recipe_id - 1].update(new_recipe)
-
-    return RECIPES[recipe_id - 1]
+@app.post("/", response_model=StoredRecipe, status_code=201)
+def create_recipe(recipe: Recipe):
+    return RecipeRepository.insert(recipe)
 
 
-# Deletar
+@app.put("/{recipe_id}", response_model=StoredRecipe)
+def update_recipe(new_recipe: Recipe, recipe_id: str):
+    return RecipeRepository.update(recipe_id, new_recipe)
+
+
 @app.delete("/{recipe_id}", status_code=204)
-def delete_recipe(recipe_id: int = Path(gt=0)):
-    try:
-        RECIPES.pop(recipe_id - 1)
-    except IndexError:
-        raise HTTPException(status_code=404, detail="Recipe not found")
+def delete_recipe(recipe_id: str):
+    RecipeRepository.delete(recipe_id)
